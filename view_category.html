@@ -1,0 +1,142 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/admin_styles.css' %}">
+</head>
+<body>
+    <nav class="navbar navbar-dark sticky-top" style="background-color: #f1ddcf;">
+        <a class="navbar-brand col-md-3 col-lg-2 mr-0 d-flex align-items-center" href="#">
+            <img src="{% static 'img/home/log10.png' %}" width="180" height="50" class="d-inline-block align-middle" alt="">
+        </a>
+        <ul class="navbar-nav px-2">
+            <li class="nav-item text-nowrap">
+                <span class="navbar-text" style="color: black; font-size: 16px;">
+                    Welcome, {{ user.username }}!
+                </span>
+            </li>
+        </ul>
+    </nav>
+    
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-2 d-none d-md-block bg-salmon sidebar">
+                <div class="sidebar-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link mt-3" href="{% url 'admin_dashboard' %}">
+                                <span data-feather="home"></span>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mt-3" href="{% url 'view_customers' %}">
+                                <span data-feather="users"></span>
+                                Customers
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.path == '/view-category/' %}active{% endif %}" href="{% url 'view_category' %}">
+                                <span data-feather="layers"></span>
+                                Categories
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mt-3" href="{% url 'view_subcategories' %}">
+                                <span data-feather="shopping-cart"></span>
+                                SubCategories
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mt-3" href="{% url 'view_product' %}">
+                                <span data-feather="shopping-cart"></span>
+                                Products
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mt-3" href="#">
+                                <span data-feather="file"></span>
+                                Orders
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mt-3" href="#">
+                                <span data-feather="settings"></span>
+                                Customizations
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mt-3" href="#">
+                                <span data-feather="credit-card"></span>
+                                Payments
+                            </a>
+                        </li>
+                       
+                        <li class="nav-item">
+                            <a class="nav-link mt-3" href="#">
+                                <span data-feather="mail"></span>
+                                Contact Us
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+                <div class="container mt-4">
+                    <h1 class="mb-4">Categories</h1>
+                    <a href="{% url 'add_category' %}" class="btn btn-primary mb-4">Add Category</a>
+                    {% if categories %}
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Category Name</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for category in categories %}
+                            <tr>
+                                <td>{{ category.id }}</td>
+                                <td>{{ category.name }}</td>
+                                <td>
+                                   <!-- Example button to toggle visibility -->
+                                  {% if category.status == 'Active' %}
+                                  <a href="{% url 'toggle_status' category.id %}" class="btn btn-sm btn-success">Active</a>
+                                   {% else %}
+                                   <a href="{% url 'toggle_status' category.id %}" class="btn btn-sm btn-secondary">Inactive</a>
+                                    {% endif %}
+
+                                </td>
+                                <td>
+                                    <a href="{% url 'edit_category' category.id %}" class="btn btn-sm btn-info">Edit</a>
+                                    <a href="{% url 'delete_category' category.id %}" class="btn btn-sm btn-danger">Delete</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <p>No categories available.</p>
+                    {% endif %}
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Custom JS -->
+    <script src="{% static 'js/admin_dashboard.js' %}"></script>
+</body>
+</html>

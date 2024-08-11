@@ -1,0 +1,121 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/admin_styles.css' %}">
+</head>
+<body>
+    <nav class="navbar navbar-dark sticky-top" style="background-color: #f1ddcf;">
+        <a class="navbar-brand col-md-3 col-lg-2 mr-0 d-flex align-items-center" href="#">
+            <img src="{% static 'img/home/log10.png' %}" width="180" height="50" class="d-inline-block align-middle" alt="">
+        </a>
+        <ul class="navbar-nav px-2">
+            <li class="nav-item text-nowrap">
+                <span class="navbar-text" style="color: black; font-size: 16px;">
+                    Welcome, {{ user.username }}!
+                </span>
+            </li>
+        </ul>
+    </nav>
+    
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-2 d-none d-md-block bg-salmon sidebar">
+                <div class="sidebar-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link Visible mt-3" href="#">
+                                <span data-feather="home"></span>
+                                Dashboard <span class="sr-only"></span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mt-3" href="{% url 'view_customers' %}">
+                                <span data-feather="users"></span>
+                                Customers
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mt-3" href="{% url 'view_category' %}">
+                                <span data-feather="layers"></span>
+                                Categories
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mt-3" href="{% url 'view_subcategories' %}">
+                                <span data-feather="layers"></span>
+                                Subcategories
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mt-3" href="{% url 'view_product' %}">
+                                <span data-feather="shopping-cart"></span>
+                                Products
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mt-3" href="#">
+                                <span data-feather="file"></span>
+                                Orders
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mt-3" href="#">
+                                <span data-feather="settings"></span>
+                                Customizations
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mt-3" href="#">
+                                <span data-feather="credit-card"></span>
+                                Payments
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mt-3" href="#">
+                                <span data-feather="heart"></span>
+                                Wishlists
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mt-3" href="#">
+                                <span data-feather="mail"></span>
+                                Contact Us
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <main role="main" class="col-md-10 ml-sm-auto px-4 main-content">
+                <div class="container d-flex justify-content-center align-items-center" style="height: 80vh;">
+                    <div class="col-md-8">
+                        <h1 class="mb-4 text-center">Edit Category</h1>
+                        <form method="post">
+                            {% csrf_token %}
+                            
+                            <div class="form-group">
+                                <label for="name">Category Name:</label>
+                                <input type="text" id="name" name="name" value="{{ category.name }}" class="form-control" required>
+                            </div>
+                           
+                            <button type="submit" class="btn btn-primary btn-block">Save</button>
+                        </form>
+                        <a href="{% url 'view_category' %}" class="btn btn-secondary btn-block mt-2">Cancel</a>
+                    </div>
+                </div>
+            </main>
+   <!-- Bootstrap JS and dependencies -->
+   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+   <!-- Custom JS -->
+   <script src="{% static 'js/admin_dashboard.js' %}"></script>
+</body>
+</html>
