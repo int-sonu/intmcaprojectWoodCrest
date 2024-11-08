@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>seller Dashboard</title>
+    <title>Admin Dashboard</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Custom CSS -->
@@ -24,18 +24,15 @@
     <a class="navbar-brand col-md-3 col-lg-2 mr-0 d-flex align-items-center" href="#">
         <img src="{% static 'img/home/log10.png' %}" width="180" height="50" class="d-inline-block align-middle" alt="" style="background-color: #f1ddcf;margin-top:50px;position:fixed;">
     </a>
-    <div class="navbar-heading text-center flex-grow-1" style="text-align: center; flex-grow: 1;">
-        <h1 style="font-size: 2rem; color: #333; margin: 0;">Seller Dashboard</h1>
-    </div>
-    
     <ul class="navbar-nav px-3 ml-auto"style="background-color: #f1ddcf;margin-top:15px;margin-left:20px;">
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: black;">
                 Welcome, {{ user.username }}!
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="{% url 'seller_profile' %}"><i data-feather="user"></i>Update Profile</a>
-                <a class="dropdown-item" href="{% url 'logout' %}"><i data-feather="key"></i> Change Password</a>
+                <a class="dropdown-item" href=""><i data-feather="user"></i> Profile</a>
+                <a class="dropdown-item" href=""><i data-feather="key"></i> Change Password</a>
+                <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{% url 'logout' %}"><i data-feather="log-out"></i> Logout</a>
             </div>
         </li>
@@ -48,6 +45,8 @@
             <nav class="col-md-2 d-none d-md-block bg-salmon sidebar">
                 <div class="sidebar-sticky">
                     <ul class="nav flex-column">
+                        
+                        
                         <li class="nav-item">
                             <a class="nav-link active mt-3" href="{% url 'seller_dashboard' %}">
                                 <i data-feather="home"></i>
@@ -97,60 +96,68 @@
                     </ul>
                 </div>
             </nav>
-
-            <!-- Main Content -->
-            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-                <!-- Page Header -->
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Dashboard</h1>
-                </div>
-
-                <!-- Example Cards -->
-           <!-- Example Cards -->
-<div class="row">
-    <div class="col-md-4">
-        <div class="card mb-4 shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Categories</h5>
-                <p class="card-text">Total Categories: {{ total_categories }}</p>
-            </div>
+            
+<body>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Custom SubCategories</title>
+        <!-- Add your CSS and JS includes here -->
+    </head>
+    <body>
+        <div class="container">
+            <h2>Custom SubCategories</h2>
+            <!-- Button to Add New SubCategory -->
+            <a href="{% url 'add_custom_subcategory' %}" class="btn btn-primary mb-3">Add New SubCategory</a>
+    
+            {% if subcategories %}
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>SubCategory Name</th>
+                            <th>Category</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for subcategory in subcategories %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ subcategory.sub_name }}</td>
+                                <td>{{ subcategory.category.name }}</td>
+                                <td>
+                                    <!-- Displaying current status with a button to toggle it -->
+                                    <form action="{% url 'toggle_custom_subcategory_status' subcategory.id %}" method="post" style="display:inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm {% if subcategory.status %}btn-success{% else %}btn-secondary{% endif %}">
+                                            {% if subcategory.status %}Active{% else %}Inactive{% endif %}
+                                        </button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <a href="{% url 'edit_custom_subcategory' subcategory.id %}" class="btn btn-warning btn-sm">Edit</a>
+                                    <form action="{% url 'delete_custom_subcategory' subcategory.id %}" method="post" style="display:inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No custom subcategories found.</p>
+            {% endif %}
         </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card mb-4 shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Subcategories</h5>
-                <p class="card-text">Total Subcategories: {{ total_subcategories }}</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card mb-4 shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Products</h5>
-                <p class="card-text">Total Products: {{ total_products }}</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-            </main>
-        </div>
-    </div>
-
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <!-- Popper.js -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <!-- Bootstrap JS -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-    <!-- Feather Icons -->
-    <script src="https://unpkg.com/feather-icons"></script>
-    <script>
-        // Initialize Feather Icons
-        feather.replace()
-    </script>
-    <!-- Custom JS -->
-    <script src="{% static 'js/admin_dashboard.js' %}"></script>
-</body>
-</html>
+        
+        <!-- Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
+    </html>
+    

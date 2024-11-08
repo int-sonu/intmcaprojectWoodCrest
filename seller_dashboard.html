@@ -6,6 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>seller Dashboard</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Custom CSS -->
@@ -86,6 +88,12 @@
                             <a class="nav-link mt-3" href="{% url 'seller_page' %}">
                                 <i data-feather="shopping-cart"></i>
                                 Custom Details
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mt-3" href="{% url 'sales_analysis' %}">
+                                <i data-feather="shopping-cart"></i>
+                                 prediction 
                             </a>
                         </li>
                         <li class="nav-item">
