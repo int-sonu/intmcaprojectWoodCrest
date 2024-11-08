@@ -7,19 +7,19 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         .navbar {
-            background-color:salmon !important; /* Change navbar color */
+            background-color: salmon !important; /* Change navbar color */
             padding-top: 50px;
             padding-bottom: 100px;
         }
         #sidebar {
-            background-color: #f1ddcf; 
+            background-color: #f1ddcf;
             height: calc(100vh - 56px); /* Adjust based on navbar height */
             position: fixed;
-            top:216px; /* Adjust based on navbar height */
+            top: 216px; /* Adjust based on navbar height */
             bottom: 0;
             left: 0;
             padding: 40px;
-            width:250px;
+            width: 250px;
         }
         #sidebar .nav-link {
             color: #000;
@@ -29,11 +29,11 @@
             font-weight: bold;
         }
         .navbar-brand img {
-            width:80px;
+            width: 80px;
             height: auto;
         }
         main {
-            margin-left: 200px;
+            margin-left: 250px; /* Adjust based on sidebar width */
         }
         .content-section {
             display: none;
@@ -63,14 +63,13 @@
             display: flex;
             justify-content: center;
             align-items: flex-start; /* Align items to the top */
-            padding-top:-60px; /* Space from the top */
-            position:fixed;
+            padding-top: 60px; /* Space from the top */
+            position: fixed;
             width: 100%;
         }
         #edit-form {
             max-width: 600px; /* Adjust width as needed */
-            margin: 50px 0 0px 20px; /* Center align the form */
-            margin-right:360px;
+            margin: 50px 0 0 20px; /* Center align the form */
             border: 1px solid #ced4da; /* Light gray border */
             border-radius: 5px; /* Rounded corners for the border */
             padding: 20px; /* Padding inside the border */
@@ -86,6 +85,9 @@
             width: 100%; /* Full width button */
             padding: 10px; /* Padding inside the button */
         }
+        .alert-box {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -94,9 +96,7 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="col-sm-4 col-md-2 d-flex align-items-center">
             <div id="logo">
-                    <img class="img-fluid" src="{% static 'img/home/log10.png' %}" alt="logo">
-                    
-            </a>   </a>
+                <img class="img-fluid" src="{% static 'img/home/log10.png' %}" alt="logo">
             </div>
         </div>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -133,15 +133,13 @@
                                 Account Information
                             </a>
                         </li>
-                        
-                       
                         <li class="nav-item">
                             <a class="nav-link {% if request.GET.section == 'payments' %}active{% endif %}" href="?section=payments">
                                 Payments
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {% if request.GET.section == 'logout' %}active{% endif %}" href="?section=logout">
+                            <a class="nav-link {% if request.GET.section == 'logout' %}active{% endif %}" href="{% url 'logout' %}">
                                 Logout
                             </a>
                         </li>
@@ -150,8 +148,7 @@
             </nav>
 
             <!-- Content Block -->
-            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-5" style="margin-left:850px;margin-bottom:35px;top:124px;">
-                <!-- Dashboard Section -->
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-5">
                 <div class="content-section {% if request.GET.section == 'dashboard' or not request.GET.section %}active{% endif %}">
                     <h1>Dashboard</h1>
                     <div class="container">
@@ -160,7 +157,7 @@
                                 <div class="card">
                                     <div class="card-header">Account Overview</div>
                                     <div class="card-body">
-                                        <h5 class="card-title">  Welcome, {{ user.username }}!</h5>
+                                        <h5 class="card-title">Welcome, {{ user.username }}!</h5>
                                         <p class="card-text">Here you can view your account details, recent orders, and more.</p>
                                     </div>
                                 </div>
@@ -168,85 +165,69 @@
                         </div>
                     </div>
                 </div>
-                <!-- Account Information Section -->
-                <div class="content-section {% if request.GET.section == 'account-info' %}active{% endif %}">
-                    <div class="form-container" style="margin-right:850px;margin-bottom:35px;top:210px;">
+
+                <div class="container">
+                    <!-- Display session message if available -->
+                    <div id="alert-container">
+                        {% if last_profile_update %}
+                            <div class="alert alert-success alert-box">
+                                {{ last_profile_update }}
+                            </div>
+                        {% endif %}
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-box">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <!-- Account Information Section -->
+                    <div class="content-section {% if request.GET.section == 'account-info' %}active{% endif %}">
                         <div id="edit-form" class="container mt-4">
                             <h2 class="mb-4 text-center">Update Information</h2>
-                            <form method="post" action="{% url 'update_profile' %}" class="bg-light p-4 rounded shadow-sm">
+                            <form id="updateForm" method="post" action="{% url 'update_profile' %}" class="bg-light p-4 rounded shadow-sm">
                                 {% csrf_token %}
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="username">Username</label>
-                                            <input type="text" class="form-control form-control-sm" id="username" name="username" value="{{ user.username }}" required>
+                                            <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}" required>
                                         </div>
                                         <div class="form-group">
                                             <label for="email">Email address</label>
-                                            <input type="email" class="form-control form-control-sm" id="email" name="email" value="{{ user.email }}" required>
+                                            <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
                                         </div>
                                         <div class="form-group">
                                             <label for="mobile_number">Mobile Number</label>
-                                            <input type="text" class="form-control form-control-sm" id="mobile_number" name="mobile_number" value="{{ user.mobile_number }}" pattern="[6789][0-9]{9}" title="Enter a valid 10-digit mobile number starting with 6, 7, 8, or 9" required>
+                                            <input type="text" class="form-control" id="mobile_number" name="mobile_number" value="{{ user.mobile_number }}" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="pincode">Pincode</label>
-                                            <input type="text" class="form-control form-control-sm" id="pincode" name="pincode" value="{{ user.pincode }}" pattern="[0-9]{6}" title="Enter a valid 6-digit pincode" required>
+                                            <input type="text" class="form-control" id="pincode" name="pincode" value="{{ user.pincode }}" required>
                                         </div>
                                         <div class="form-group">
                                             <label for="address">Address</label>
-                                            <textarea class="form-control form-control-sm" id="address" name="address" rows="6" required>{{ user.address }}</textarea>
+                                            <textarea class="form-control" id="address" name="address" rows="3" required>{{ user.address }}</textarea>
                                         </div>
+                                        <button type="submit" class="btn btn-primary mt-4">Update Profile</button>
                                     </div>
                                 </div>
-                                <div class="text-center">
-                                    <button type="submit" class="btn btn-primary">Update Information</button>
-                                </div>
                             </form>
-                            {% if updated %}
-                                <div class="alert alert-success mt-3 text-center">Your information has been updated successfully.</div>
-                            {% endif %}
                         </div>
                     </div>
-                </div>
-               <!-- Manage Addresses Section -->
-<!-- Manage Addresses Section -->
 
-
-
-
-
-
-                </div>
-                <!-- My Orders Section -->
-                <div class="content-section {% if request.GET.section == 'my-orders' %}active{% endif %}">
-                    <h1>My Orders</h1>
-                    <p>My Orders Content</p>
-                </div>
-                <!-- Payments Section -->
-                <div class="content-section {% if request.GET.section == 'payments' %}active{% endif %}">
-                    <h1>Payments</h1>
-                    <p>Payments Content</p>
-                </div>
-                <!-- Logout Section -->
-                <div class="content-section {% if request.GET.section == 'logout' %}active{% endif %}">
-                    <h1>Logout</h1>
-                    <p>Logout Content</p>
                 </div>
             </main>
         </div>
     </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.11/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
-<script>
-    function toggleForm() {
-        var form = document.getElementById('address-form');
-        if (form.style.display === 'none' || form.style.display === '') {
-            form.style.display = 'block';
-        } else {
-            form.style.display = 'none';
-        }
-    }
-</script>
 </html>
